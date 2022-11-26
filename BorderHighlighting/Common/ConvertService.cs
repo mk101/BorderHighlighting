@@ -4,7 +4,7 @@ using System.Windows.Media.Imaging;
 namespace BorderHighlighting.Common;
 
 
-public class ConvertService
+public static class ConvertService
 {
     public static BitmapImage WritableBitmapToBitmapImage(WriteableBitmap writeableBitmap, BitmapEncoder encoder)
     {
