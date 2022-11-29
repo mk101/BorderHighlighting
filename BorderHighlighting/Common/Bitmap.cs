@@ -20,6 +20,9 @@ public class Bitmap
         _writeableBitmap.CopyPixels(_data.Pixels, _data.Stride, 0);
     }
 
+    public int Width => _data.Width;
+    public int Height => _data.Height;
+
     public Color GetColor(int x, int y)
     {
         if ((x < 0) || (x >= _data.Width))
@@ -77,6 +80,6 @@ public class Bitmap
     }
     
     private WriteableBitmap _writeableBitmap;
-    private BitmapData _data;
-    private BitmapEncoder _encoder;
+    private readonly BitmapData _data;
+    private readonly BitmapEncoder _encoder;
 }
