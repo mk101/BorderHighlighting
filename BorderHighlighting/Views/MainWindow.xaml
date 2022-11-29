@@ -11,6 +11,33 @@
         <vm:MainWindowViewModel/>
     </Window.DataContext>
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <Menu Grid.Row="0" Grid.ColumnSpan="3">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Command="{Binding OpenCommand}"/>
+                <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
+            </MenuItem>
+            
+        </Menu>
+        
+        <Image Grid.Column="0" 
+            Grid.Row="1" 
+            Source="{Binding OurImage, Mode=OneWay}"/>
+        <Image Grid.Column="1" 
+               Grid.Row="1" 
+               Source="{Binding BaseImage, Mode=OneWay}"/>
+        <Image Grid.Column="2" 
+               Grid.Row="1" 
+               Source="{Binding CvImage, Mode=OneWay}"/>
     </Grid>
 </Window>
