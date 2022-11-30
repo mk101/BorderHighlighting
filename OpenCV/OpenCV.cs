@@ -6,7 +6,7 @@ namespace OpenCV;
 
 public class OpenCv
 {
-    public byte[] GenerateImage()
+    public ImageData GenerateImage()
     {
         Mat img = new Mat(200, 400, DepthType.Cv8U, 4);
         img.SetTo(new Bgr(255, 0, 0).MCvScalar);
@@ -19,7 +19,7 @@ public class OpenCv
             1.0,
             new Bgr(0, 255, 0).MCvScalar
         );
-        
-        return img.GetRawData();
+
+        return new ImageData(img.GetRawData(), img.Width, img.Height);
     }
 }
