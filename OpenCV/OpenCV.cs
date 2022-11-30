@@ -6,7 +6,16 @@ namespace OpenCV;
 
 public class OpenCv
 {
-    public ImageData GenerateImage()
+    public ImageData Canny(ImageData source, double thresh, double threshLinking)
+    {
+        var img = new Image<Bgra, byte>(source.Width, source.Height);
+        img.Bytes = source.Pixels;
+        var canny = img.Canny(thresh, threshLinking);
+
+        return new ImageData(canny.Bytes, canny.Width, canny.Height, ImageData.ChannelsType.Gray);
+    }
+    
+    public ImageData GenerateHelloWorldImage()
     {
         Mat mat = new Mat(200, 400, DepthType.Cv8U, 4);
         mat.SetTo(new Bgra(255, 0, 0, 255).MCvScalar);
@@ -38,6 +47,6 @@ public class OpenCv
         //     }
         // }
         
-        return new ImageData(img.Bytes, img.Width, img.Height);
+        return new ImageData(img.Bytes, img.Width, img.Height, ImageData.ChannelsType.Brga);
     }
 }

@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using OpenCV;
 
 namespace BorderHighlighting.Common;
 
@@ -21,23 +22,48 @@ public class Bitmap
         _writeableBitmap.CopyPixels(_data.Pixels, _data.Stride, 0);
     }
 
-    public Bitmap(byte[] pixels, int width, int height)
+    public Bitmap(ImageData imageData)
     {
-        _writeableBitmap = new WriteableBitmap(width, height, 1, 1, PixelFormats.Bgra32, null);
+        _writeableBitmap = new WriteableBitmap(imageData.Width, imageData.Height, 1, 1, PixelFormats.Bgra32, null);
         _data = new BitmapData()
         {
-            Width = width,
-            Height = height,
-            Stride = 4 * width,
-            Pixels = new byte[4 * width * height]
+            Width = imageData.Width,
+            Height = imageData.Height,
+            Stride = 4 * imageData.Width,
+            Pixels = new byte[4 * imageData.Width * imageData.Height]
         };
 
         _encoder = new PngBitmapEncoder();
-        Array.Copy(pixels, _data.Pixels, 4*width*height);
+        if (imageData.Channels == ImageData.ChannelsType.Brga)
+        {
+            Array.Copy(imageData.Pixels, _data.Pixels, 4 * imageData.Width * imageData.Height);
+            return;
+        }
+
+        int index = 0;
+        foreach (var value in imageData.Pixels)
+        {
+            _data.Pixels[index] = value;
+            _data.Pixels[index + 1] = value;
+            _data.Pixels[index + 2] = value;
+            _data.Pixels[index + 3] = 255;
+
+            index += 4;
+        }
     }
 
     public int Width => _data.Width;
     public int Height => _data.Height;
+
+    public byte[] Data
+    {
+        get
+        {
+            var data = new byte[_data.Pixels.Length];
+            Array.Copy(_data.Pixels, data, _data.Pixels.Length);
+            return data;
+        }
+    }
 
     public Color GetColor(int x, int y)
     {

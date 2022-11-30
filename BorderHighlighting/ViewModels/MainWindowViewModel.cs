@@ -26,20 +26,33 @@ public class MainWindowViewModel : NotifyPropertyChanged
             
             OurImage = image;
             BaseImage = image;
+            CvImage = image;
 
             _ourBitmap = new Bitmap(image, encoder!);
             _baseBitmap = new Bitmap(image, encoder!);
-
-            var img = _cv.GenerateImage();
-            _cvBitmap = new Bitmap(img.Pixels, img.Width, img.Height);
-            CvImage = _cvBitmap.GetBitmapSource();
+            _cvBitmap = new Bitmap(image, encoder!);
         });
 
         SaveCommand = new RelayCommand(() => { });
+
+        CannyCvCommand = new RelayCommand(() =>
+        {
+            if (_cvBitmap is null)
+            {
+                return;
+            }
+            
+            var id = ConvertService.BitmapToImageData(_cvBitmap);
+            var img = _cv.Canny(id, 100, 200);
+            _cvBitmap = new Bitmap(img);
+            CvImage = _cvBitmap.GetBitmapSource();
+        });
     }
     
     public RelayCommand OpenCommand { get; }
     public RelayCommand SaveCommand { get; }
+    
+    public RelayCommand CannyCvCommand { get; }
 
     public ImageSource? OurImage
     {
