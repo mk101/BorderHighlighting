@@ -23,7 +23,7 @@ public class Bitmap
 
     public Bitmap(byte[] pixels, int width, int height)
     {
-        _writeableBitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr32, null);
+        _writeableBitmap = new WriteableBitmap(width, height, 1, 1, PixelFormats.Bgra32, null);
         _data = new BitmapData()
         {
             Width = width,
@@ -33,7 +33,7 @@ public class Bitmap
         };
 
         _encoder = new PngBitmapEncoder();
-        Array.Copy(pixels, _data.Pixels, width*height);
+        Array.Copy(pixels, _data.Pixels, 4*width*height);
     }
 
     public int Width => _data.Width;

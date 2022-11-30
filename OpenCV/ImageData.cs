@@ -11,7 +11,7 @@ public struct ImageData
         Width = width;
         Height = height;
         
-        Pixels = new byte[width * height];
-        Array.Copy(pixels, Pixels, width * height);
+        Pixels = new byte[4 * width * height];
+        Array.Copy(pixels, Pixels, 4 * width * height);
     }
 }

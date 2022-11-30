@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using BorderHighlighting.Common;
 using BorderHighlighting.Common.MVVM;
+using OpenCV;
 
 namespace BorderHighlighting.ViewModels;
 
@@ -11,6 +12,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
     public MainWindowViewModel()
     {
         var fm = new FileManager();
+        _cv = new OpenCv();
         
         OpenCommand = new RelayCommand(() =>
         {
@@ -24,11 +26,13 @@ public class MainWindowViewModel : NotifyPropertyChanged
             
             OurImage = image;
             BaseImage = image;
-            CvImage = image;
 
             _ourBitmap = new Bitmap(image, encoder!);
             _baseBitmap = new Bitmap(image, encoder!);
-            _cvBitmap = new Bitmap(image, encoder!);
+
+            var img = _cv.GenerateImage();
+            _cvBitmap = new Bitmap(img.Pixels, img.Width, img.Height);
+            CvImage = _cvBitmap.GetBitmapSource();
         });
 
         SaveCommand = new RelayCommand(() => { });
@@ -89,4 +93,6 @@ public class MainWindowViewModel : NotifyPropertyChanged
     private Bitmap? _ourBitmap;
     private Bitmap? _baseBitmap;
     private Bitmap? _cvBitmap;
+
+    private OpenCv _cv;
 }

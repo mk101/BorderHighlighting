@@ -8,18 +8,36 @@ public class OpenCv
 {
     public ImageData GenerateImage()
     {
-        Mat img = new Mat(200, 400, DepthType.Cv8U, 4);
-        img.SetTo(new Bgr(255, 0, 0).MCvScalar);
+        Mat mat = new Mat(200, 400, DepthType.Cv8U, 4);
+        mat.SetTo(new Bgra(255, 0, 0, 255).MCvScalar);
         
         CvInvoke.PutText(
-            img,
+            mat,
             "Hello world",
             new System.Drawing.Point(10, 80),
             FontFace.HersheyComplex,
             1.0,
-            new Bgr(0, 255, 0).MCvScalar
+            new Bgra(0, 255, 0, 255).MCvScalar
         );
 
-        return new ImageData(img.GetRawData(), img.Width, img.Height);
+
+        var img = mat.ToImage<Bgra, byte>();
+        // byte[] array = new byte[4 * 200 * 400];
+        // int index = 0;
+        // for (int i = 0; i < mat.Rows; i++)
+        // {
+        //     for (int j = 0; j < mat.Cols; j++)
+        //     {
+        //         var bgra = img[i,j];
+        //         array[index] = (byte) (bgra.Blue);
+        //         array[index + 1] = (byte) (bgra.Green);
+        //         array[index + 2] = (byte) (bgra.Red);
+        //         array[index + 3] = (byte) (bgra.Alpha);
+        //
+        //         index += 4;
+        //     }
+        // }
+        
+        return new ImageData(img.Bytes, img.Width, img.Height);
     }
 }
