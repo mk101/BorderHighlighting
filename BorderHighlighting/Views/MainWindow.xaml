@@ -30,6 +30,7 @@
             <MenuItem Header="Processing">
                 <MenuItem Header="Cobel" Command="{Binding CobelCommand}"/>
                 <MenuItem Header="Prewitt" Command="{Binding PrewittCommand}"/>
+                <MenuItem Header="Canny" Command="{Binding CannyCommand}"/>
             </MenuItem>
             
         </Menu>

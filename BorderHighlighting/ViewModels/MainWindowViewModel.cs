@@ -59,6 +59,19 @@ public class MainWindowViewModel : NotifyPropertyChanged
             var resImage = image.GetBitmapSource();
             OurImage = resImage;
         });
+        
+        CannyCommand = new RelayCommand(() =>
+        {
+            var sourceImage = _ourBitmap;
+            if (sourceImage == null)
+            {
+                return;
+            }
+            
+            var image = CannyService.Processing(sourceImage);
+            var resImage = image.GetBitmapSource();
+            OurImage = resImage;
+        });
     }
     
     public RelayCommand OpenCommand { get; }
@@ -66,6 +79,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
     
     public RelayCommand CobelCommand { get; }
     public RelayCommand PrewittCommand { get; }
+    public RelayCommand CannyCommand { get; }
 
     public ImageSource? OurImage
     {
