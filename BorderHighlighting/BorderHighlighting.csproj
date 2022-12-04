@@ -5,10 +5,16 @@
         <TargetFramework>net6.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
+        <Configurations>Release;Debug</Configurations>
+        <Platforms>x64</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
       <Folder Include="Models" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OpenCV\OpenCV.csproj" />
     </ItemGroup>
 
 </Project>

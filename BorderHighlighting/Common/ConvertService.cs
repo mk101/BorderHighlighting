@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Windows.Media.Imaging;
+using OpenCV;
 
 namespace BorderHighlighting.Common;
 
@@ -20,5 +21,10 @@ public static class ConvertService
         image.Freeze();
 
         return image;
+    }
+
+    public static ImageData BitmapToImageData(Bitmap bitmap)
+    {
+        return new ImageData(bitmap.Data, bitmap.Width, bitmap.Height, ImageData.ChannelsType.Brga);
     }
 }

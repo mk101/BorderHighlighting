@@ -28,6 +28,10 @@
                 <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
             </MenuItem>
             
+            <MenuItem Header="CV">
+                <MenuItem Header="Canny" Command="{Binding CannyCvCommand}"/>
+            </MenuItem>
+            
         </Menu>
         
         <Image Grid.Column="0" 
