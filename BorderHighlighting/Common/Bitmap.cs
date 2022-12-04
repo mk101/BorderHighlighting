@@ -20,6 +20,20 @@ public class Bitmap
         _writeableBitmap.CopyPixels(_data.Pixels, _data.Stride, 0);
     }
 
+    public Bitmap(Bitmap source)
+    {
+        _writeableBitmap = source._writeableBitmap;
+        _encoder = source._encoder;
+        _data = new BitmapData
+        {
+            Width = source.Width,
+            Height = source.Height,
+            Stride = 4 * source.Width,
+            Pixels = new byte[4 * source.Width * source.Height]
+        };
+        _writeableBitmap.CopyPixels(_data.Pixels, _data.Stride, 0);
+    }
+
     public int Width => _data.Width;
     public int Height => _data.Height;
 

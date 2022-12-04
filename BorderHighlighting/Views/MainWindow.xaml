@@ -27,6 +27,10 @@
                 <MenuItem Header="Open" Command="{Binding OpenCommand}"/>
                 <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
             </MenuItem>
+            <MenuItem Header="Processing">
+                <MenuItem Header="Cobel" Command="{Binding CobelCommand}"/>
+                <MenuItem Header="Prewitt" Command="{Binding PrewittCommand}"/>
+            </MenuItem>
             
         </Menu>
         
