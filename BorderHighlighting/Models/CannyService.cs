@@ -8,6 +8,9 @@ public class CannyService
     public static Bitmap Processing(Bitmap sourceImage)
     {
         var image = ReductionNoise(sourceImage);
+        var imageWithGradient = CobelService.Processing(image);
+        image = NonMaximumSuppression(imageWithGradient.Image, imageWithGradient.Gradient);
+        
         return image;
     }
 
@@ -30,6 +33,47 @@ public class CannyService
             }
         }
         
+        return image;
+    }
+
+    private static Bitmap NonMaximumSuppression(Bitmap sourceImage, double[,] gradient)
+    {
+        var image = new Bitmap(sourceImage);
+
+        for (var y = 1; y < sourceImage.Height - 1; y++) {
+            for (var x = 1; x < sourceImage.Width - 1; x++) {
+                var baseIntensity = sourceImage.GetColor(x, y).I;
+
+                byte intensity1, intensity2;
+                switch (gradient[y,x])
+                {
+                    case < 22.5:
+                    case >= 157.5 and <= 180:
+                        intensity1 = sourceImage.GetColor(x, y+1).I;
+                        intensity2 = sourceImage.GetColor(x, y-1).I;
+                        break;
+                    case >= 22.5 and < 67.5:
+                        intensity1 = sourceImage.GetColor(x+1, y-1).I;
+                        intensity2 = sourceImage.GetColor(x-1, y+1).I;
+                        break;
+                    case >= 67.5 and < 112.5:
+                        intensity1 = sourceImage.GetColor(x + 1, y).I;
+                        intensity2 = sourceImage.GetColor(x - 1, y).I;
+                        break;
+                    default:
+                        intensity1 = sourceImage.GetColor(x-1, y-1).I;
+                        intensity2 = sourceImage.GetColor(x+1, y+1).I;
+                        break;
+                }
+
+                if (baseIntensity >= intensity1 && baseIntensity > intensity2) {
+                    image.SetColor(x, y, new Color(baseIntensity));
+                }else {
+                    image.SetColor(x, y, new Color(0));
+                }
+            }
+        }
+
         return image;
     }
 
