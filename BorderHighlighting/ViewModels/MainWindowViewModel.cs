@@ -4,6 +4,7 @@ using System.Windows.Media;
 using BorderHighlighting.Common;
 using BorderHighlighting.Common.MVVM;
 using OpenCV;
+using BorderHighlighting.Models;
 
 namespace BorderHighlighting.ViewModels;
 
@@ -47,10 +48,39 @@ public class MainWindowViewModel : NotifyPropertyChanged
             _cvBitmap = new Bitmap(img);
             CvImage = _cvBitmap.GetBitmapSource();
         });
+
+        CobelCommand = new RelayCommand(() =>
+        {
+            var sourceImage = _ourBitmap;
+            if (sourceImage == null)
+            {
+                return;
+            }
+            
+            var image = CobelService.Processing(sourceImage);
+            var resImage = image.GetBitmapSource();
+            OurImage = resImage;
+        });
+        
+        PrewittCommand = new RelayCommand(() =>
+        {
+            var sourceImage = _ourBitmap;
+            if (sourceImage == null)
+            {
+                return;
+            }
+            
+            var image = PrewittService.Processing(sourceImage);
+            var resImage = image.GetBitmapSource();
+            OurImage = resImage;
+        });
     }
     
     public RelayCommand OpenCommand { get; }
     public RelayCommand SaveCommand { get; }
+    
+    public RelayCommand CobelCommand { get; }
+    public RelayCommand PrewittCommand { get; }
     
     public RelayCommand CannyCvCommand { get; }
 
