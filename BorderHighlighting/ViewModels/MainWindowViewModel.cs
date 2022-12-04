@@ -57,8 +57,8 @@ public class MainWindowViewModel : NotifyPropertyChanged
                 return;
             }
             
-            var image = CobelService.Processing(sourceImage);
-            var resImage = image.GetBitmapSource();
+            var imageWithGradient = CobelService.Processing(sourceImage);
+            var resImage = imageWithGradient.Image.GetBitmapSource();
             OurImage = resImage;
         });
         

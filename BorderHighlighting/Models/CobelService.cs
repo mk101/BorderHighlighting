@@ -5,7 +5,7 @@ namespace BorderHighlighting.Models;
 
 public static class CobelService
 {
-    public static Bitmap Processing(Bitmap sourceImage)
+    public static ImageWithGradient Processing(Bitmap sourceImage)
     {
         float[,] kernelX =
         {
@@ -22,6 +22,7 @@ public static class CobelService
         };
         
         var image = new Bitmap(sourceImage);
+        var gradient = new double[sourceImage.Height, sourceImage.Width];
         
         for (var y = 1; y < sourceImage.Height-1; y++) {
             for (var x = 1; x < sourceImage.Width-1; x++)
@@ -35,6 +36,7 @@ public static class CobelService
                         
                         intensityX += kernelX[i, j] * sourceImage.GetColor(xn, yn).I;
                         intensityY += kernelY[i, j] * sourceImage.GetColor(xn, yn).I;
+                        gradient[yn, xn] = Math.Atan(intensityY/intensityX);
                     }
                 }
 
@@ -42,7 +44,16 @@ public static class CobelService
                 image.SetColor(x, y, new Color(intensity, intensity, intensity));
             }
         }
-        
-        return image;
+
+        return new ImageWithGradient {
+            Image = image,
+            Gradient = gradient
+        };
     }
+}
+
+public struct ImageWithGradient
+{
+    public Bitmap Image;
+    public double[,] Gradient;
 }
