@@ -41,10 +41,10 @@ public struct Color
     public byte I {
         get
         {
-            // if (R != G || G != B)
-            // {
-            //     throw new InvalidOperationException("Must be grayscale color");
-            // }
+            if (R != G || G != B)
+            {
+                throw new InvalidOperationException("Must be grayscale color");
+            }
             return R;
         }
     }

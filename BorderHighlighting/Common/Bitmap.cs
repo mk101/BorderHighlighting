@@ -52,6 +52,23 @@ public class Bitmap
         }
     }
 
+    public byte GetMaxIntensity()
+    {
+        byte max = 0;
+        for (var y = 0; y < Height; y++)
+        {
+            for (var x = 0; x < Width; x++)
+            {
+                if (GetColor(x, y).I > max)
+                {
+                    max = GetColor(x, y).I;
+                }
+            }
+        }
+        
+        return max;
+    }
+
     public int Width => _data.Width;
     public int Height => _data.Height;
 
