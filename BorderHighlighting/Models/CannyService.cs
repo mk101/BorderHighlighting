@@ -10,6 +10,8 @@ public class CannyService
         var image = ReductionNoise(sourceImage);
         var imageWithGradient = CobelService.Processing(image);
         image = NonMaximumSuppression(imageWithGradient.Image, imageWithGradient.Gradient);
+        image = DoubleThreshold(image);
+        image = Hysteresis(image);
         
         return image;
     }
@@ -76,6 +78,66 @@ public class CannyService
 
         return image;
     }
+
+    private static Bitmap DoubleThreshold(Bitmap sourceImage, double lowThresholdRatio = 0.15, double highThresholdRatio = 0.25)
+    {
+        var image = new Bitmap(sourceImage);
+        var max = image.GetMaxIntensity();
+
+        var highThreshold = (byte)(max * highThresholdRatio);
+        var lowThreshold = (byte)(highThreshold * lowThresholdRatio);
+
+        for (var y = 0; y < sourceImage.Height; y++) {
+            for (var x = 0; x < sourceImage.Width; x++) {
+                var intensity = sourceImage.GetColor(x, y).I;
+
+                if (intensity >= highThreshold) {
+                    image.SetColor(x,y,new Color(_strong));
+                } else if (intensity > lowThreshold) {
+                    image.SetColor(x,y,new Color(_week));
+                } else {
+                    image.SetColor(x,y,new Color(0));
+                }
+            }
+        }
+        
+        return image;
+    }
+
+    public static Bitmap Hysteresis(Bitmap sourceImage)
+    {
+        var image = new Bitmap(sourceImage);
+
+        for (var y = 1; y < sourceImage.Height-1; y++) {
+            for (var x = 1; x < sourceImage.Width-1; x++) {
+                var setStrong = false;
+                
+                for (var i = -1; i <= 1; i++) {
+                    for (var j = -1; j <= 1; j++) {
+                        if (i == 0 && j == 0) {
+                            continue;
+                        }
+
+                        if (sourceImage.GetColor(x + i, y + j).I == _strong) {
+                            setStrong = true;
+                        }
+                    }
+                }
+
+                if (setStrong) {
+                    image.SetColor(x, y, new Color(_strong));
+                }else {
+                    image.SetColor(x, y, new Color(0));
+                }
+            }
+        }
+
+        return image;
+    }
+
+    private static readonly byte _strong = 255;
+    private static readonly byte _week = 25;
+    
 
     private static readonly double[,] GaussianKernel =
     {
