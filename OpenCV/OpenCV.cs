@@ -15,6 +15,14 @@ public class OpenCv
         return new ImageData(canny.Bytes, canny.Width, canny.Height, ImageData.ChannelsType.Gray);
     }
     
+    public ImageData Sobel(ImageData source)
+    {
+        var img = new Image<Gray, byte>(source.Width, source.Height);
+        img.Bytes = source.Pixels;
+        var canny =  img.Sobel(0, 1, 3).Add(img.Sobel(1, 0, 3)).AbsDiff(new Gray(0.0));
+        return new ImageData(canny.Bytes, canny.Width, canny.Height, ImageData.ChannelsType.Gray);
+    }
+    
     public ImageData GenerateHelloWorldImage()
     {
         Mat mat = new Mat(200, 400, DepthType.Cv8U, 4);

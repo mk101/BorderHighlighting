@@ -35,6 +35,7 @@
             
             <MenuItem Header="CV">
                 <MenuItem Header="Canny" Command="{Binding CannyCvCommand}"/>
+                <MenuItem Header="Sobel" Command="{Binding CobelCvCommand}"/>
             </MenuItem>
             
         </Menu>

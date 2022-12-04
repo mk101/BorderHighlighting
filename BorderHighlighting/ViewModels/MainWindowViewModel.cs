@@ -35,6 +35,19 @@ public class MainWindowViewModel : NotifyPropertyChanged
         });
 
         SaveCommand = new RelayCommand(() => { });
+        
+        CobelCvCommand = new RelayCommand(() =>
+        {
+            if (_cvBitmap is null)
+            {
+                return;
+            }
+            
+            var id = ConvertService.BitmapToImageData(_cvBitmap);
+            var img = _cv.Sobel(id);
+            _cvBitmap = new Bitmap(img);
+            CvImage = _cvBitmap.GetBitmapSource();
+        });
 
         CannyCvCommand = new RelayCommand(() =>
         {
@@ -96,6 +109,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
     public RelayCommand PrewittCommand { get; }
     
     public RelayCommand CannyCvCommand { get; }
+    public RelayCommand CobelCvCommand { get; }
     public RelayCommand CannyCommand { get; }
 
     public ImageSource? OurImage
