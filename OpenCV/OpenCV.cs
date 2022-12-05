@@ -14,12 +14,31 @@ public class OpenCv
 
         return new ImageData(canny.Bytes, canny.Width, canny.Height, ImageData.ChannelsType.Gray);
     }
-    
+
+    public ImageData HoughCircles(ImageData source, double cannyTresh, double accumThresh)
+    {
+        var img = new Image<Bgra, byte>(source.Width, source.Height);
+        img.Bytes = source.Pixels;
+
+
+        var circles = img.HoughCircles(new Bgra(cannyTresh, cannyTresh, cannyTresh, 255), new Bgra(accumThresh, accumThresh, accumThresh, 255), 1, 35, 100, 200);
+
+        for (int i = 0; i < circles.Length; i++)
+        {
+            for (int j = 0; j < circles[i].Length; j++)
+            {
+                img.Draw(circles[i][j], new Bgra(.0, .0, 255.0, 255.0), 2);
+            }
+        }
+
+        return new ImageData(img.Bytes, img.Width, img.Height, ImageData.ChannelsType.Brga);
+    }
+
     public ImageData GenerateHelloWorldImage()
     {
         Mat mat = new Mat(200, 400, DepthType.Cv8U, 4);
         mat.SetTo(new Bgra(255, 0, 0, 255).MCvScalar);
-        
+
         CvInvoke.PutText(
             mat,
             "Hello world",
@@ -46,7 +65,7 @@ public class OpenCv
         //         index += 4;
         //     }
         // }
-        
+
         return new ImageData(img.Bytes, img.Width, img.Height, ImageData.ChannelsType.Brga);
     }
 }
