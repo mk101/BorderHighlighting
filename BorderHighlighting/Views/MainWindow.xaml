@@ -29,7 +29,7 @@
             </MenuItem>
 
             <MenuItem Header="Processing">
-                <MenuItem Header="Cobel" Command="{Binding SobelCommand}"/>
+                <MenuItem Header="Sobel" Command="{Binding SobelCommand}"/>
                 <MenuItem Header="Prewitt" Command="{Binding PrewittCommand}"/>
                 <MenuItem Header="Canny" Command="{Binding CannyCommand}"/>
                 
@@ -44,6 +44,9 @@
                 <MenuItem Header="Hough circles" Command="{Binding HoughCirclesCvCommand}"/>
 
             </MenuItem>
+            
+            <TextBlock Text="{Binding OurTime}"/>
+            <TextBlock Text="{Binding OpenCVTime}"/>
 
         </Menu>
 

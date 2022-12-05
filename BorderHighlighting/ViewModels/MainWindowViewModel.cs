@@ -1,4 +1,5 @@
 using System;
+using System.Net.Mime;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -50,9 +51,14 @@ public class MainWindowViewModel : NotifyPropertyChanged
             {
                 return;
             }
+
+            var timeStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             
             var imageWithGradient = CobelService.Processing(ConvertService.ToGrayscale(sourceImage));
             var resImage = imageWithGradient.Image.GetBitmapSource();
+            
+            OurTime = "Our: " + (DateTimeOffset.Now.ToUnixTimeMilliseconds() - timeStart) + "ms";
+            
             OurImage = resImage;
         });
         
@@ -64,8 +70,12 @@ public class MainWindowViewModel : NotifyPropertyChanged
                 return;
             }
             
+            var timeStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            
             var image = PrewittService.Processing(ConvertService.ToGrayscale(sourceImage));
             var resImage = image.GetBitmapSource();
+            
+            OurTime = "Our: " + (DateTimeOffset.Now.ToUnixTimeMilliseconds() - timeStart) + "ms";
             OurImage = resImage;
         });
 
@@ -78,8 +88,12 @@ public class MainWindowViewModel : NotifyPropertyChanged
                 return;
             }
             
+            var timeStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            
             var image = CannyService.Processing(ConvertService.ToGrayscale(sourceImage));
             var resImage = image.GetBitmapSource();
+            
+            OurTime = "Our: " + (DateTimeOffset.Now.ToUnixTimeMilliseconds() - timeStart) + "ms";
             OurImage = resImage;
         });
 
@@ -91,9 +105,13 @@ public class MainWindowViewModel : NotifyPropertyChanged
                 return;
             }
 
+            var timeStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            
             var id = ConvertService.BitmapToImageData(_baseBitmap);
             var img = _cv.Canny(id, 100, 200);
             _cvBitmap = new Bitmap(img);
+            
+            OpenCVTime = "OpenCV: " + (DateTimeOffset.Now.ToUnixTimeMilliseconds() - timeStart) + "ms";
             CvImage = _cvBitmap.GetBitmapSource();
         });
 
@@ -103,9 +121,15 @@ public class MainWindowViewModel : NotifyPropertyChanged
             {
                 return;
             }
+            
+            var timeStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            
             var id = ConvertService.BitmapToImageData(_baseBitmap);
             var img = _cv.HoughCircles(id, 30, 80);
             _cvBitmap = new Bitmap(img);
+            
+            OpenCVTime = "OpenCV: " + (DateTimeOffset.Now.ToUnixTimeMilliseconds() - timeStart) + "ms";
+            
             CvImage = _cvBitmap.GetBitmapSource();
         });
         
@@ -115,6 +139,8 @@ public class MainWindowViewModel : NotifyPropertyChanged
             {
                 return;
             }
+            
+            var timeStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
             var circles = houghCircles.FindCircles(CannyService.Processing(ConvertService.ToGrayscale(_baseBitmap)), 500);
 
@@ -134,6 +160,8 @@ public class MainWindowViewModel : NotifyPropertyChanged
                     _ourBitmap.SetColor(x, y, new Color(255, 0, 0));
                 }
             }
+            
+            OurTime = "Our: " + (DateTimeOffset.Now.ToUnixTimeMilliseconds() - timeStart) + "ms";
 
             OurImage = _ourBitmap.GetBitmapSource();
         });         
@@ -145,6 +173,8 @@ public class MainWindowViewModel : NotifyPropertyChanged
             {
                 return;
             }
+            
+            var timeStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             var lines = hough.FindLines(CannyService.Processing(ConvertService.ToGrayscale(_baseBitmap)), 350);
 
             foreach (var line in lines)
@@ -174,6 +204,8 @@ public class MainWindowViewModel : NotifyPropertyChanged
 
                 }
             }
+            
+            OurTime = "Our: " + (DateTimeOffset.Now.ToUnixTimeMilliseconds() - timeStart) + "ms";
 
             OurImage = _ourBitmap.GetBitmapSource();
         });
@@ -186,9 +218,13 @@ public class MainWindowViewModel : NotifyPropertyChanged
                 return;
             }
             
+            var timeStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            
             var id = ConvertService.BitmapToImageData(_baseBitmap);
             var img = _cv.HoughLines(id, 200, 180, 100);
             _cvBitmap = new Bitmap(img);
+            
+            OpenCVTime = "OpenCV: " + (DateTimeOffset.Now.ToUnixTimeMilliseconds() - timeStart) + "ms";
             CvImage = _cvBitmap.GetBitmapSource();
 
         });
@@ -199,10 +235,13 @@ public class MainWindowViewModel : NotifyPropertyChanged
             {
                 return;
             }
+            var timeStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             
             var id = ConvertService.BitmapToImageData(_baseBitmap);
             var img = _cv.Sobel(id);
             _cvBitmap = new Bitmap(img);
+            
+            OpenCVTime = "OpenCV: " + (DateTimeOffset.Now.ToUnixTimeMilliseconds() - timeStart) + "ms";
             CvImage = _cvBitmap.GetBitmapSource();
         });
     }
@@ -222,7 +261,35 @@ public class MainWindowViewModel : NotifyPropertyChanged
     
     public RelayCommand HoughLineCommand { get; }
     public RelayCommand HoughLineCvCommand { get; }
+    public string? OurTime
+    {
+        get => _ourTime;
+        set
+        {
+            if (Equals(value, _ourTime))
+            {
+                return;
+            }
 
+            _ourTime = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public string? OpenCVTime
+    {
+        get => _openCVTime;
+        set
+        {
+            if (Equals(value, _openCVTime))
+            {
+                return;
+            }
+
+            _openCVTime = value;
+            OnPropertyChanged();
+        }
+    }
 
     public ImageSource? OurImage
     {
@@ -272,6 +339,9 @@ public class MainWindowViewModel : NotifyPropertyChanged
     private ImageSource? _ourImage;
     private ImageSource? _baseImage;
     private ImageSource? _cvImage;
+    
+    private string? _ourTime = "";
+    private string? _openCVTime = "";
 
     private Bitmap? _ourBitmap;
     private Bitmap? _baseBitmap;
