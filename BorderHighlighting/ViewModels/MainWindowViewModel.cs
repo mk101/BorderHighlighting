@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -8,6 +8,7 @@ using BorderHighlighting.Models;
 using OpenCV;
 using Color = BorderHighlighting.Common.Color;
 
+
 namespace BorderHighlighting.ViewModels;
 
 public class MainWindowViewModel : NotifyPropertyChanged
@@ -15,7 +16,10 @@ public class MainWindowViewModel : NotifyPropertyChanged
     public MainWindowViewModel()
     {
         var fm = new FileManager();
+
         var houghCircles = new HoughCircle();
+        var hough = new Hough();
+
         _cv = new OpenCv();
 
         OpenCommand = new RelayCommand(() =>
@@ -39,6 +43,47 @@ public class MainWindowViewModel : NotifyPropertyChanged
 
         SaveCommand = new RelayCommand(() => { });
 
+        CobelCommand = new RelayCommand(() =>
+        {
+            var sourceImage = _ourBitmap;
+            if (sourceImage == null)
+            {
+                return;
+            }
+            
+            var imageWithGradient = CobelService.Processing(sourceImage);
+            var resImage = imageWithGradient.Image.GetBitmapSource();
+            OurImage = resImage;
+        });
+        
+        PrewittCommand = new RelayCommand(() =>
+        {
+            var sourceImage = _ourBitmap;
+            if (sourceImage == null)
+            {
+                return;
+            }
+            
+            var image = PrewittService.Processing(sourceImage);
+            var resImage = image.GetBitmapSource();
+            OurImage = resImage;
+        });
+
+        
+        CannyCommand = new RelayCommand(() =>
+        {
+            var sourceImage = _ourBitmap;
+            if (sourceImage == null)
+            {
+                return;
+            }
+            
+            var image = CannyService.Processing(sourceImage);
+            var resImage = image.GetBitmapSource();
+            OurImage = resImage;
+        });
+
+
         CannyCvCommand = new RelayCommand(() =>
         {
             if (_cvBitmap is null)
@@ -55,16 +100,15 @@ public class MainWindowViewModel : NotifyPropertyChanged
         HoughCirclesCvCommand = new RelayCommand(() =>
         {
             if (_cvBitmap is null)
-            {
+             {
                 return;
-            }
-
-            var id = ConvertService.BitmapToImageData(_cvBitmap);
+             }
+             var id = ConvertService.BitmapToImageData(_cvBitmap);
             var img = _cv.HoughCircles(id, 30, 80);
             _cvBitmap = new Bitmap(img);
             CvImage = _cvBitmap.GetBitmapSource();
         });
-
+        
         HoughCirclesCommand = new RelayCommand(() =>
         {
             if (_ourBitmap is null)
@@ -88,19 +132,83 @@ public class MainWindowViewModel : NotifyPropertyChanged
                         continue;
                     }
                     _ourBitmap.SetColor(x, y, new Color(255, 0, 0));
+                 }
+            }
+
+            OurImage = _ourBitmap.GetBitmapSource();
+        });         
+
+
+         HoughLineCommand = new RelayCommand(() =>
+        {
+            if (_ourBitmap is null)
+             {
+                return;
+             }
+            var lines = hough.FindLines(_ourBitmap);
+
+            foreach (var line in lines)
+            {
+                if (line.K is null)
+                {
+                    if (line.X < 0 || line.X >= _ourBitmap.Width)
+                    {
+                        continue;
+                    }
+                    for (int i = 0; i < _ourBitmap.Height; i++)
+                    {
+                        _ourBitmap.SetColor((int) line.X, i, new Color(255, 0, 0));
+                    }
+                    
+                    continue;
+                }
+
+                for (int i = 0; i < _ourBitmap.Width; i++)
+                {
+                    int y = (int) ((line.K ?? 0) * i + line.B);
+                    if (y < 0 || y >= _ourBitmap.Height)
+                    {
+                        continue;
+                    }
+                    _ourBitmap.SetColor(i, y, new Color(255, 0, 0));
+
                 }
             }
 
             OurImage = _ourBitmap.GetBitmapSource();
+        });
+
+
+        HoughLineCvCommand = new RelayCommand(() =>
+        {
+            if (_cvBitmap is null)
+            {
+                return;
+            }
+            
+            var id = ConvertService.BitmapToImageData(_cvBitmap);
+            var img = _cv.HoughLines(id, 200, 180, 100);
+            _cvBitmap = new Bitmap(img);
+            CvImage = _cvBitmap.GetBitmapSource();
+
         });
     }
 
     public RelayCommand OpenCommand { get; }
     public RelayCommand SaveCommand { get; }
 
-    public RelayCommand CannyCvCommand { get; }
     public RelayCommand HoughCirclesCvCommand { get; }
     public RelayCommand HoughCirclesCommand { get; }
+
+    public RelayCommand CobelCommand { get; }
+    public RelayCommand PrewittCommand { get; }
+
+    public RelayCommand CannyCommand { get; }
+    public RelayCommand CannyCvCommand { get; }
+    
+    public RelayCommand HoughLineCommand { get; }
+    public RelayCommand HoughLineCvCommand { get; }
+
 
     public ImageSource? OurImage
     {

@@ -29,12 +29,23 @@
             </MenuItem>
 
             <MenuItem Header="Processing">
+                <MenuItem Header="Cobel" Command="{Binding CobelCommand}"/>
+                <MenuItem Header="Prewitt" Command="{Binding PrewittCommand}"/>
+                <MenuItem Header="Canny" Command="{Binding CannyCommand}"/>
+                
+                <MenuItem Header="Hough lines" Command="{Binding HoughLineCommand}"/>
                 <MenuItem Header="Hough circles" Command="{Binding HoughCirclesCommand}"/>
             </MenuItem>
-
+            
+            <MenuItem Header="Processing">
+                <MenuItem Header="Hough lines" Command="{Binding HoughLineCommand}"/>
+            </MenuItem>
+            
             <MenuItem Header="CV">
                 <MenuItem Header="Canny" Command="{Binding CannyCvCommand}"/>
+                <MenuItem Header="Hough lines" Command="{Binding HoughLineCvCommand}"/>
                 <MenuItem Header="Hough circles" Command="{Binding HoughCirclesCvCommand}"/>
+
             </MenuItem>
 
         </Menu>

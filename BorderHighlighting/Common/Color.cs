@@ -24,6 +24,14 @@ public struct Color
         Blue = blue;
         Alpha = 255;
     }
+    
+    public Color(byte intensity)
+    {
+        Red = intensity;
+        Green = intensity;
+        Blue = intensity;
+        Alpha = 255;
+    }
 
     public byte R => Red;
     public byte G => Green;

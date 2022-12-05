@@ -15,12 +15,12 @@ public class OpenCv
         return new ImageData(canny.Bytes, canny.Width, canny.Height, ImageData.ChannelsType.Gray);
     }
 
+
     public ImageData HoughCircles(ImageData source, double cannyTresh, double accumThresh)
     {
         var img = new Image<Bgra, byte>(source.Width, source.Height);
         img.Bytes = source.Pixels;
-
-
+        
         var circles = img.HoughCircles(new Bgra(cannyTresh, cannyTresh, cannyTresh, 255), new Bgra(accumThresh, accumThresh, accumThresh, 255), 1, 35, 100, 200);
 
         for (int i = 0; i < circles.Length; i++)
@@ -28,6 +28,25 @@ public class OpenCv
             for (int j = 0; j < circles[i].Length; j++)
             {
                 img.Draw(circles[i][j], new Bgra(.0, .0, 255.0, 255.0), 2);
+            }
+        }
+
+        return new ImageData(img.Bytes, img.Width, img.Height, ImageData.ChannelsType.Brga);
+     }
+
+    public ImageData HoughLines(ImageData source, double cannyThresh, double cannyThreshLinking, int threshold)
+    {
+        var img = new Image<Bgra, byte>(source.Width, source.Height);
+        img.Bytes = source.Pixels;
+
+        var lines = img.HoughLines(cannyThresh, cannyThreshLinking, 1.0, Math.PI/180, threshold, 1, 1.0);
+
+        for (int i = 0; i < lines.Length; i++)
+        {
+            for (int j = 0; j < lines[i].Length; j++)
+            {
+                img.Draw(lines[i][j], new Bgra(.0,.0,255.0,255.0), 1);
+
             }
         }
 
