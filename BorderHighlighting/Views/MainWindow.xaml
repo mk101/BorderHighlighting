@@ -32,8 +32,13 @@
                 <MenuItem Header="Prewitt" Command="{Binding PrewittCommand}"/>
             </MenuItem>
             
+            <MenuItem Header="Processing">
+                <MenuItem Header="Hough lines" Command="{Binding HoughLineCommand}"/>
+            </MenuItem>
+            
             <MenuItem Header="CV">
                 <MenuItem Header="Canny" Command="{Binding CannyCvCommand}"/>
+                <MenuItem Header="Hough lines" Command="{Binding HoughLineCvCommand}"/>
             </MenuItem>
             
         </Menu>
