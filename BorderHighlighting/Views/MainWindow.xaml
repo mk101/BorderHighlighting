@@ -32,6 +32,10 @@
                 <MenuItem Header="Prewitt" Command="{Binding PrewittCommand}"/>
             </MenuItem>
             
+            <MenuItem Header="CV">
+                <MenuItem Header="Canny" Command="{Binding CannyCvCommand}"/>
+            </MenuItem>
+            
         </Menu>
         
         <Image Grid.Column="0" 

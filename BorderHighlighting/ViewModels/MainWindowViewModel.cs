@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Media;
 using BorderHighlighting.Common;
 using BorderHighlighting.Common.MVVM;
 using BorderHighlighting.Models;
+using OpenCV;
+
 
 namespace BorderHighlighting.ViewModels;
 
@@ -12,6 +14,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
     public MainWindowViewModel()
     {
         var fm = new FileManager();
+        _cv = new OpenCv();
         
         OpenCommand = new RelayCommand(() =>
         {
@@ -41,7 +44,6 @@ public class MainWindowViewModel : NotifyPropertyChanged
             {
                 return;
             }
-            
             var image = CobelService.Processing(sourceImage);
             var resImage = image.GetBitmapSource();
             OurImage = resImage;
@@ -59,13 +61,29 @@ public class MainWindowViewModel : NotifyPropertyChanged
             var resImage = image.GetBitmapSource();
             OurImage = resImage;
         });
+
+        CannyCvCommand = new RelayCommand(() =>
+        {
+            if (_cvBitmap is null)
+            {
+                return;
+            }
+            
+            var id = ConvertService.BitmapToImageData(_cvBitmap);
+            var img = _cv.Canny(id, 100, 200);
+            _cvBitmap = new Bitmap(img);
+            CvImage = _cvBitmap.GetBitmapSource();
+        });
     }
     
     public RelayCommand OpenCommand { get; }
     public RelayCommand SaveCommand { get; }
     
+
     public RelayCommand CobelCommand { get; }
     public RelayCommand PrewittCommand { get; }
+    public RelayCommand CannyCvCommand { get; }
+
 
     public ImageSource? OurImage
     {
@@ -119,4 +137,6 @@ public class MainWindowViewModel : NotifyPropertyChanged
     private Bitmap? _ourBitmap;
     private Bitmap? _baseBitmap;
     private Bitmap? _cvBitmap;
+
+    private OpenCv _cv;
 }
