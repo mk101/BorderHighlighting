@@ -15,22 +15,26 @@
             <RowDefinition Height="20"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        
+
         <Menu Grid.Row="0" Grid.ColumnSpan="3">
             <MenuItem Header="File">
                 <MenuItem Header="Open" Command="{Binding OpenCommand}"/>
                 <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
             </MenuItem>
+
             <MenuItem Header="Processing">
                 <MenuItem Header="Cobel" Command="{Binding CobelCommand}"/>
                 <MenuItem Header="Prewitt" Command="{Binding PrewittCommand}"/>
                 <MenuItem Header="Canny" Command="{Binding CannyCommand}"/>
+                
+                <MenuItem Header="Hough lines" Command="{Binding HoughLineCommand}"/>
+                <MenuItem Header="Hough circles" Command="{Binding HoughCirclesCommand}"/>
             </MenuItem>
             
             <MenuItem Header="Processing">
@@ -40,10 +44,12 @@
             <MenuItem Header="CV">
                 <MenuItem Header="Canny" Command="{Binding CannyCvCommand}"/>
                 <MenuItem Header="Hough lines" Command="{Binding HoughLineCvCommand}"/>
+                <MenuItem Header="Hough circles" Command="{Binding HoughCirclesCvCommand}"/>
+
             </MenuItem>
-            
+
         </Menu>
-        
+
         <Image Grid.Column="0" 
             Grid.Row="1" 
             Source="{Binding OurImage, Mode=OneWay}"/>
