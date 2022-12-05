@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using OpenCV;
 
 namespace BorderHighlighting.Common;
 
@@ -20,6 +22,7 @@ public class Bitmap
         _writeableBitmap.CopyPixels(_data.Pixels, _data.Stride, 0);
     }
 
+
     public Bitmap(Bitmap source)
     {
         _writeableBitmap = source._writeableBitmap;
@@ -32,6 +35,36 @@ public class Bitmap
             Pixels = new byte[4 * source.Width * source.Height]
         };
         _writeableBitmap.CopyPixels(_data.Pixels, _data.Stride, 0);
+
+    public Bitmap(ImageData imageData)
+    {
+        _writeableBitmap = new WriteableBitmap(imageData.Width, imageData.Height, 1, 1, PixelFormats.Bgra32, null);
+        _data = new BitmapData()
+        {
+            Width = imageData.Width,
+            Height = imageData.Height,
+            Stride = 4 * imageData.Width,
+            Pixels = new byte[4 * imageData.Width * imageData.Height]
+        };
+
+        _encoder = new PngBitmapEncoder();
+        if (imageData.Channels == ImageData.ChannelsType.Brga)
+        {
+            Array.Copy(imageData.Pixels, _data.Pixels, 4 * imageData.Width * imageData.Height);
+            return;
+        }
+
+        int index = 0;
+        foreach (var value in imageData.Pixels)
+        {
+            _data.Pixels[index] = value;
+            _data.Pixels[index + 1] = value;
+            _data.Pixels[index + 2] = value;
+            _data.Pixels[index + 3] = 255;
+
+            index += 4;
+        }
+
     }
 
     public byte GetMaxIntensity()
@@ -54,6 +87,16 @@ public class Bitmap
     public int Width => _data.Width;
     public int Height => _data.Height;
 
+    public byte[] Data
+    {
+        get
+        {
+            var data = new byte[_data.Pixels.Length];
+            Array.Copy(_data.Pixels, data, _data.Pixels.Length);
+            return data;
+        }
+    }
+
     public Color GetColor(int x, int y)
     {
         if ((x < 0) || (x >= _data.Width))
@@ -68,9 +111,9 @@ public class Bitmap
 
         var index = y * _data.Stride + 4 * x;
         return new Color(
-            _data.Pixels[index],
-            _data.Pixels[index + 1],
             _data.Pixels[index + 2],
+            _data.Pixels[index + 1],
+            _data.Pixels[index],
             _data.Pixels[index + 3]
         );
     }
@@ -90,9 +133,9 @@ public class Bitmap
         var index = y * _data.Stride + 4 * x;
         var pixels = _data.Pixels;
         
-        pixels[index] = color.R;
+        pixels[index] = color.B;
         pixels[index + 1] = color.G;
-        pixels[index + 2] = color.B;
+        pixels[index + 2] = color.R;
         pixels[index + 3] = color.A;
     }
 
