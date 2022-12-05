@@ -3,7 +3,7 @@ using BorderHighlighting.Common;
 
 namespace BorderHighlighting.Models;
 
-public class CannyService
+public static class CannyService
 {
     public static Bitmap Processing(Bitmap sourceImage)
     {

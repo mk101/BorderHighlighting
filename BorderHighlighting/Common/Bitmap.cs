@@ -25,7 +25,7 @@ public class Bitmap
 
     public Bitmap(Bitmap source)
     {
-        _writeableBitmap = source._writeableBitmap;
+        _writeableBitmap = new WriteableBitmap(source._writeableBitmap);
         _encoder = source._encoder;
         _data = new BitmapData
         {
@@ -34,7 +34,8 @@ public class Bitmap
             Stride = 4 * source.Width,
             Pixels = new byte[4 * source.Width * source.Height]
         };
-        _writeableBitmap.CopyPixels(_data.Pixels, _data.Stride, 0);
+        Array.Copy(source._data.Pixels, _data.Pixels, source._data.Pixels.Length);
+    }
 
     public Bitmap(ImageData imageData)
     {

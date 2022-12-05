@@ -51,7 +51,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
                 return;
             }
             
-            var imageWithGradient = CobelService.Processing(sourceImage);
+            var imageWithGradient = CobelService.Processing(ConvertService.ToGrayscale(sourceImage));
             var resImage = imageWithGradient.Image.GetBitmapSource();
             OurImage = resImage;
         });
@@ -64,7 +64,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
                 return;
             }
             
-            var image = PrewittService.Processing(sourceImage);
+            var image = PrewittService.Processing(ConvertService.ToGrayscale(sourceImage));
             var resImage = image.GetBitmapSource();
             OurImage = resImage;
         });
@@ -78,7 +78,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
                 return;
             }
             
-            var image = CannyService.Processing(sourceImage);
+            var image = CannyService.Processing(ConvertService.ToGrayscale(sourceImage));
             var resImage = image.GetBitmapSource();
             OurImage = resImage;
         });
@@ -100,10 +100,10 @@ public class MainWindowViewModel : NotifyPropertyChanged
         HoughCirclesCvCommand = new RelayCommand(() =>
         {
             if (_cvBitmap is null)
-             {
+            {
                 return;
-             }
-             var id = ConvertService.BitmapToImageData(_cvBitmap);
+            }
+            var id = ConvertService.BitmapToImageData(_cvBitmap);
             var img = _cv.HoughCircles(id, 30, 80);
             _cvBitmap = new Bitmap(img);
             CvImage = _cvBitmap.GetBitmapSource();
@@ -116,7 +116,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
                 return;
             }
             int minR = 0;
-            var circles = houghCircles.FindCircles(_ourBitmap, 500);
+            var circles = houghCircles.FindCircles(CannyService.Processing(ConvertService.ToGrayscale(_ourBitmap)), 500);
 
             foreach (var circle in circles)
             {
@@ -132,7 +132,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
                         continue;
                     }
                     _ourBitmap.SetColor(x, y, new Color(255, 0, 0));
-                 }
+                }
             }
 
             OurImage = _ourBitmap.GetBitmapSource();
@@ -142,10 +142,10 @@ public class MainWindowViewModel : NotifyPropertyChanged
          HoughLineCommand = new RelayCommand(() =>
         {
             if (_ourBitmap is null)
-             {
+            {
                 return;
-             }
-            var lines = hough.FindLines(_ourBitmap);
+            }
+            var lines = hough.FindLines(CannyService.Processing(ConvertService.ToGrayscale(_ourBitmap)), 350);
 
             foreach (var line in lines)
             {
