@@ -6,15 +6,9 @@ namespace BorderHighlighting.Common;
 
 public class JpgFileService : FileService
 {
-    public JpgFileService()
-    {
-        _encoder = new JpegBitmapEncoder();
-    }
-
     public override BitmapEncoder GetEncoder()
     {
-        return _encoder;
+        return new JpegBitmapEncoder();
     }
-
-    private readonly BitmapEncoder _encoder;
+    
 }

@@ -9,6 +9,7 @@ public class FileManager
     public const string Filter = "png files (*.png)|*.png|jpg files (*.jpg)|*.jpg";
 
     public BitmapEncoder? Encoder => _fileService?.GetEncoder();
+    public FileService? FileService => _fileService;
     
     public BitmapImage? Open()
     {

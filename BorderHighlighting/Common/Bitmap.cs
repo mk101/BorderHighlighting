@@ -8,7 +8,7 @@ namespace BorderHighlighting.Common;
 
 public class Bitmap
 {
-    public Bitmap(BitmapSource image, BitmapEncoder encoder)
+    public Bitmap(BitmapSource image, FileService fileService)
     {
         _writeableBitmap = new WriteableBitmap(image);
         _data = new BitmapData
@@ -18,7 +18,7 @@ public class Bitmap
             Stride = 4 * image.PixelWidth,
             Pixels = new byte[4 * image.PixelWidth * image.PixelHeight]
         };
-        _encoder = encoder;
+        _fileService = fileService;
         _writeableBitmap.CopyPixels(_data.Pixels, _data.Stride, 0);
     }
 
@@ -26,7 +26,7 @@ public class Bitmap
     public Bitmap(Bitmap source)
     {
         _writeableBitmap = new WriteableBitmap(source._writeableBitmap);
-        _encoder = source._encoder;
+        _fileService = source._fileService;
         _data = new BitmapData
         {
             Width = source.Width,
@@ -48,7 +48,7 @@ public class Bitmap
             Pixels = new byte[4 * imageData.Width * imageData.Height]
         };
 
-        _encoder = new PngBitmapEncoder();
+        _fileService = new PngFileService();
         if (imageData.Channels == ImageData.ChannelsType.Brga)
         {
             Array.Copy(imageData.Pixels, _data.Pixels, 4 * imageData.Width * imageData.Height);
@@ -143,7 +143,7 @@ public class Bitmap
     public BitmapSource GetBitmapSource()
     {
         _writeableBitmap.WritePixels(new Int32Rect(0, 0, _data.Width, _data.Height), _data.Pixels, _data.Stride, 0);
-        return ConvertService.WritableBitmapToBitmapImage(_writeableBitmap, _encoder);
+        return ConvertService.WritableBitmapToBitmapImage(_writeableBitmap, _fileService.GetEncoder());
     }
 
     private struct BitmapData
@@ -156,5 +156,5 @@ public class Bitmap
     
     private WriteableBitmap _writeableBitmap;
     private readonly BitmapData _data;
-    private readonly BitmapEncoder _encoder;
+    private readonly FileService _fileService;
 }

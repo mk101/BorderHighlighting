@@ -6,15 +6,8 @@ namespace BorderHighlighting.Common;
 
 public class PngFileService : FileService
 {
-    public PngFileService()
-    {
-        _encoder = new PngBitmapEncoder();
-    }
-
     public override BitmapEncoder GetEncoder()
     {
-        return _encoder;
+        return new PngBitmapEncoder();
     }
-
-    private readonly BitmapEncoder _encoder;
 }

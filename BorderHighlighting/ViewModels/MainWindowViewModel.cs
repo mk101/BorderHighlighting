@@ -25,7 +25,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
         OpenCommand = new RelayCommand(() =>
         {
             var image = fm.Open();
-            var encoder = fm.Encoder;
+            var fs = fm.FileService;
 
             if (image is null)
             {
@@ -36,9 +36,9 @@ public class MainWindowViewModel : NotifyPropertyChanged
             BaseImage = image;
             CvImage = image;
 
-            _ourBitmap = new Bitmap(image, encoder!);
-            _baseBitmap = new Bitmap(image, encoder!);
-            _cvBitmap = new Bitmap(image, encoder!);
+            _ourBitmap = new Bitmap(image, fs!);
+            _baseBitmap = new Bitmap(image, fs!);
+            _cvBitmap = new Bitmap(image, fs!);
         });
 
         SaveCommand = new RelayCommand(() => { });
