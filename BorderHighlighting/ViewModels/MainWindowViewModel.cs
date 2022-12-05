@@ -45,7 +45,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
 
         CobelCommand = new RelayCommand(() =>
         {
-            var sourceImage = _ourBitmap;
+            var sourceImage = _baseBitmap;
             if (sourceImage == null)
             {
                 return;
@@ -58,7 +58,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
         
         PrewittCommand = new RelayCommand(() =>
         {
-            var sourceImage = _ourBitmap;
+            var sourceImage = _baseBitmap;
             if (sourceImage == null)
             {
                 return;
@@ -72,7 +72,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
         
         CannyCommand = new RelayCommand(() =>
         {
-            var sourceImage = _ourBitmap;
+            var sourceImage = _baseBitmap;
             if (sourceImage == null)
             {
                 return;
@@ -86,12 +86,12 @@ public class MainWindowViewModel : NotifyPropertyChanged
 
         CannyCvCommand = new RelayCommand(() =>
         {
-            if (_cvBitmap is null)
+            if (_baseBitmap is null)
             {
                 return;
             }
 
-            var id = ConvertService.BitmapToImageData(_cvBitmap);
+            var id = ConvertService.BitmapToImageData(_baseBitmap);
             var img = _cv.Canny(id, 100, 200);
             _cvBitmap = new Bitmap(img);
             CvImage = _cvBitmap.GetBitmapSource();
@@ -99,11 +99,11 @@ public class MainWindowViewModel : NotifyPropertyChanged
 
         HoughCirclesCvCommand = new RelayCommand(() =>
         {
-            if (_cvBitmap is null)
+            if (_baseBitmap is null)
             {
                 return;
             }
-            var id = ConvertService.BitmapToImageData(_cvBitmap);
+            var id = ConvertService.BitmapToImageData(_baseBitmap);
             var img = _cv.HoughCircles(id, 30, 80);
             _cvBitmap = new Bitmap(img);
             CvImage = _cvBitmap.GetBitmapSource();
@@ -111,12 +111,12 @@ public class MainWindowViewModel : NotifyPropertyChanged
         
         HoughCirclesCommand = new RelayCommand(() =>
         {
-            if (_ourBitmap is null)
+            if (_baseBitmap is null || _ourBitmap is null)
             {
                 return;
             }
-            int minR = 0;
-            var circles = houghCircles.FindCircles(CannyService.Processing(ConvertService.ToGrayscale(_ourBitmap)), 500);
+
+            var circles = houghCircles.FindCircles(CannyService.Processing(ConvertService.ToGrayscale(_baseBitmap)), 500);
 
             foreach (var circle in circles)
             {
@@ -141,11 +141,11 @@ public class MainWindowViewModel : NotifyPropertyChanged
 
          HoughLineCommand = new RelayCommand(() =>
         {
-            if (_ourBitmap is null)
+            if (_baseBitmap is null || _ourBitmap is null)
             {
                 return;
             }
-            var lines = hough.FindLines(CannyService.Processing(ConvertService.ToGrayscale(_ourBitmap)), 350);
+            var lines = hough.FindLines(CannyService.Processing(ConvertService.ToGrayscale(_baseBitmap)), 350);
 
             foreach (var line in lines)
             {
@@ -181,12 +181,12 @@ public class MainWindowViewModel : NotifyPropertyChanged
 
         HoughLineCvCommand = new RelayCommand(() =>
         {
-            if (_cvBitmap is null)
+            if (_baseBitmap is null)
             {
                 return;
             }
             
-            var id = ConvertService.BitmapToImageData(_cvBitmap);
+            var id = ConvertService.BitmapToImageData(_baseBitmap);
             var img = _cv.HoughLines(id, 200, 180, 100);
             _cvBitmap = new Bitmap(img);
             CvImage = _cvBitmap.GetBitmapSource();
