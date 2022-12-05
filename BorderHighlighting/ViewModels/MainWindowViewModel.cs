@@ -43,7 +43,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
 
         SaveCommand = new RelayCommand(() => { });
 
-        CobelCommand = new RelayCommand(() =>
+        SobelCommand = new RelayCommand(() =>
         {
             var sourceImage = _baseBitmap;
             if (sourceImage == null)
@@ -192,6 +192,19 @@ public class MainWindowViewModel : NotifyPropertyChanged
             CvImage = _cvBitmap.GetBitmapSource();
 
         });
+
+        SobelCvCommand = new RelayCommand(() =>
+        {
+            if (_baseBitmap is null)
+            {
+                return;
+            }
+            
+            var id = ConvertService.BitmapToImageData(_baseBitmap);
+            var img = _cv.Sobel(id);
+            _cvBitmap = new Bitmap(img);
+            CvImage = _cvBitmap.GetBitmapSource();
+        });
     }
 
     public RelayCommand OpenCommand { get; }
@@ -200,7 +213,8 @@ public class MainWindowViewModel : NotifyPropertyChanged
     public RelayCommand HoughCirclesCvCommand { get; }
     public RelayCommand HoughCirclesCommand { get; }
 
-    public RelayCommand CobelCommand { get; }
+    public RelayCommand SobelCommand { get; }
+    public RelayCommand SobelCvCommand { get; }
     public RelayCommand PrewittCommand { get; }
 
     public RelayCommand CannyCommand { get; }

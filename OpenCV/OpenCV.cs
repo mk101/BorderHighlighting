@@ -14,6 +14,16 @@ public class OpenCv
 
         return new ImageData(canny.Bytes, canny.Width, canny.Height, ImageData.ChannelsType.Gray);
     }
+    
+    public ImageData Sobel(ImageData source)
+    {
+        var img = new Image<Bgra, byte>(source.Width, source.Height);
+        img.Bytes = source.Pixels;
+        var gray = img.Convert<Gray, byte>();
+        var sobel = gray.Sobel(1, 0, 3).AbsDiff(new Gray(0.0));
+        var res = sobel.Convert<Gray, byte>();
+        return new ImageData(res.Bytes, res.Width, res.Height, ImageData.ChannelsType.Gray);
+    }
 
 
     public ImageData HoughCircles(ImageData source, double cannyTresh, double accumThresh)
