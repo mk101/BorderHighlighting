@@ -46,8 +46,9 @@ public class MainWindowViewModel : NotifyPropertyChanged
             {
                 return;
             }
-            var image = CobelService.Processing(sourceImage);
-            var resImage = image.GetBitmapSource();
+            
+            var imageWithGradient = CobelService.Processing(sourceImage);
+            var resImage = imageWithGradient.Image.GetBitmapSource();
             OurImage = resImage;
         });
         
@@ -64,13 +65,28 @@ public class MainWindowViewModel : NotifyPropertyChanged
             OurImage = resImage;
         });
 
+        
+        CannyCommand = new RelayCommand(() =>
+        {
+            var sourceImage = _ourBitmap;
+            if (sourceImage == null)
+            {
+                return;
+            }
+            
+            var image = CannyService.Processing(sourceImage);
+            var resImage = image.GetBitmapSource();
+            OurImage = resImage;
+        });
+
+
         CannyCvCommand = new RelayCommand(() =>
         {
             if (_cvBitmap is null)
             {
                 return;
             }
-            
+
             var id = ConvertService.BitmapToImageData(_cvBitmap);
             var img = _cv.Canny(id, 100, 200);
             _cvBitmap = new Bitmap(img);
@@ -127,6 +143,7 @@ public class MainWindowViewModel : NotifyPropertyChanged
             var img = _cv.HoughLines(id, 200, 180, 100);
             _cvBitmap = new Bitmap(img);
             CvImage = _cvBitmap.GetBitmapSource();
+
         });
     }
     
@@ -136,6 +153,8 @@ public class MainWindowViewModel : NotifyPropertyChanged
 
     public RelayCommand CobelCommand { get; }
     public RelayCommand PrewittCommand { get; }
+
+    public RelayCommand CannyCommand { get; }
     public RelayCommand CannyCvCommand { get; }
     
     public RelayCommand HoughLineCommand { get; }
